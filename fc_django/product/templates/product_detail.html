@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block contents %}
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card" style="width: 100%">
+            <div class="card-body">
+                <h5 class="card-title">{{product.name}}</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">가격: {{product.price|intcomma}} 원</li>
+                <li class="list-group-item">등록날짜: {{product.register_date|date:'Y-m-d H:i'}}</li>
+                <li class="list-group-item">설명: {{product.description|safe}}</li><!--safe가 이미지를 보게함-->
+            </ul>
+        </div>
+    </div>
+        <!-- {{product.id}}
+        {{product.name}}
+        {{product.price|intcomma}} 원
+        {{product.register_date|date:'Y-m-d H:i'}}
+        {{product.description}} -->
+    <div class="row">
+        <div class="col-12">
+            <a href="/product/">목록보기</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
