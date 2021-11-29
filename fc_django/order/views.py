@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
+
+#from fc_django.fcuser.decorators import login_required
 from .models import Order
 from .forms import RegisterForm
+from fcuser.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
-from .models import Order
 # Create your views here.
 
 
+@method_decorator(login_required, name='dispatch')
 class OrderCreate(FormView):
     form_class = RegisterForm
     success_url = '/product/'
@@ -22,6 +26,7 @@ class OrderCreate(FormView):
         return kw
 
 
+@method_decorator(login_required, name='dispatch')
 class OrderList(ListView):
     template_name = 'order.html'
     context_object_name = 'order_list'
