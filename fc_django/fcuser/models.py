@@ -9,8 +9,7 @@ class Fcuser(models.Model):
     level = models.CharField(max_length=8, verbose_name='등급',
                              choices=(
                                  ('admin', 'admin'),
-                                 ('user', 'user'),
-                                 (None, None)
+                                 ('user', 'user')
                              ))
     register_date = models.DateTimeField(
         auto_now_add=True, verbose_name='등록날짜')

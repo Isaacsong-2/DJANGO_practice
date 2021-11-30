@@ -21,6 +21,16 @@ class ProductCreate(FormView):
     template_name = 'register_product.html'
     success_url = '/product/'
 
+    def form_valid(self, form):
+        product = Product(
+            name=form.data.get('name'),
+            price=form.data.get('price'),
+            description=form.data.get('description'),
+            stock=form.data.get('stock')
+        )
+        product.save()
+        return super().form_valid(form)
+
 
 class ProductDetail(DetailView):
     template_name = 'product_detail.html'
