@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% block header%}
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            url: "/api/product",
+            success: function( result ) {
+                console.log(result);
+            }
+        });
+    });
+</script>
+{% endblock %}
 {% block contents %}
 <div class="row mt-5">
     <div class="col-12">
@@ -16,7 +28,7 @@
                 {% for product in product_list %}
                 <tr>
                     <th scope="row">{{product.id}}</th>
-                    <th><a href = "/product/{{ product.id }}" >{{product.name}}</a></th>
+                    <th><a id="product-{{ product.id }}" href = "/product/{{ product.id }}" >{{product.name}}</a></th>
                     <th>{{product.price|intcomma}} 원</th>
                     <th>{{product.register_date|date:'Y-m-d H:i'}}</th>
                 </tr>
