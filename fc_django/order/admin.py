@@ -4,7 +4,7 @@ from .models import Order
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('fcuser', 'product')
+    list_display = ('fcuser', 'product', 'status')
 
 
 admin.site.register(Order, OrderAdmin)
