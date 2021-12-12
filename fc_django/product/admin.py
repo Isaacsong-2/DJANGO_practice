@@ -8,6 +8,10 @@ from .models import Product
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price_format', 'styled_stock')
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = {'title': '상품 목록'}
+        return super().changelist_view(request, extra_context)
+
     def price_format(self, obj):
         price = intcomma(obj.price)
         return f'{price} 원'

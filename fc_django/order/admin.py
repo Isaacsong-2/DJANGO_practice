@@ -8,6 +8,10 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     list_display = ('fcuser', 'product', 'styled_status')
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = {'title': '주문 목록'}
+        return super().changelist_view(request, extra_context)
+
     def styled_status(self, obj):
         if obj.status == '환불':
             # obj.status
