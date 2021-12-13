@@ -12,7 +12,7 @@ def refund(modeladmin, request, queryset):
     with transaction.atomic():
         qs = queryset.filter(~Q(status='환불'))
 
-        ct = ContentType.objects.get_for_model(queryset.model)
+        ct = ContentType.objects.get_for_model(qs.model)
 
         for obj in qs:
             obj.product.stock += obj.quantity
@@ -49,7 +49,25 @@ class OrderAdmin(admin.ModelAdmin):
         extra_context = {'title': '주문 목록'}
 
         if request.method == 'POST':
-            pass
+            obj_id = request.POST.get('obj.id')
+            print(obj_id)
+            if obj_id:
+                qs = Order.objects.filter(pk=obj_id)
+                ct = ContentType.objects.get_for_model(qs.model)
+                print(obj_id)
+                for obj in qs:
+                    obj.product.stock += obj.quantity
+                    obj.product.save()
+
+                    LogEntry.objects.log_action(
+                        user_id=request.user.id,
+                        content_type_id=ct.pk,
+                        object_id=obj.pk,
+                        object_repr='주문 환불',
+                        action_flag=CHANGE,
+                        change_message='주문 환불'
+                    )
+                qs.update(status='환불')
         return super().changelist_view(request, extra_context)
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
