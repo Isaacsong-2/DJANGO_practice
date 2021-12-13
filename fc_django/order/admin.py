@@ -1,12 +1,30 @@
+from django.db.models import F
 from django.contrib import admin
 from .models import Order
 from django.utils.html import format_html
 # Register your models here.
 
 
+def refund(modeladmin, request, queryset):
+    queryset.update(status='환불')
+    for obj in queryset:
+        obj.product.stock += obj.quantity
+        obj.product.save()
+
+
+refund.short_description = '환불'
+
+
 class OrderAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     list_display = ('fcuser', 'product', 'styled_status')
+
+    actions = [
+        refund
+    ]
+
+    def refund(self, request, queryset):
+        pass
 
     def changelist_view(self, request, extra_context=None):
         extra_context = {'title': '주문 목록'}
