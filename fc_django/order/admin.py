@@ -2,8 +2,10 @@ from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.contrib import admin
+from django.template.response import TemplateResponse
 from .models import Order
 from django.db import transaction
+from django.urls import path
 from django.utils.html import format_html
 # Register your models here.
 
@@ -78,6 +80,19 @@ class OrderAdmin(admin.ModelAdmin):
         extra_context['show_save_and_add_another'] = False
         extra_context['show_save_and_continue'] = False
         return super().changeform_view(request, object_id, form_url, extra_context)
+
+    def get_urls(self):
+        urls = super().get_urls()
+        date_urls = [
+            path('date_view/', self.date_view)
+        ]
+        return date_urls + urls
+
+    def date_view(self, request):
+        context = dict(
+            self.admin_site.each_context(request),
+        )
+        return TemplateResponse(request, 'admin/order_date_view.html', context)
 
     def styled_status(self, obj):
         if obj.status == '환불':
