@@ -1,15 +1,32 @@
-from django.db.models import F
+from django.contrib.admin.models import LogEntry, CHANGE
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from django.contrib import admin
 from .models import Order
+from django.db import transaction
 from django.utils.html import format_html
 # Register your models here.
 
 
 def refund(modeladmin, request, queryset):
-    queryset.update(status='환불')
-    for obj in queryset:
-        obj.product.stock += obj.quantity
-        obj.product.save()
+    with transaction.atomic():
+        qs = queryset.filter(~Q(status='환불'))
+
+        ct = ContentType.objects.get_for_model(queryset.model)
+
+        for obj in qs:
+            obj.product.stock += obj.quantity
+            obj.product.save()
+
+            LogEntry.objects.log_action(
+                user_id=request.user.id,
+                content_type_id=ct.pk,
+                object_id=obj.pk,
+                object_repr='주문 환불',
+                action_flag=CHANGE,
+                change_message='주문 환불'
+            )
+        qs.update(status='환불')
 
 
 refund.short_description = '환불'
