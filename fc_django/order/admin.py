@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
@@ -89,8 +90,13 @@ class OrderAdmin(admin.ModelAdmin):
         return date_urls + urls
 
     def date_view(self, request):
+        week_date = datetime.datetime.now() - datetime.timedelta(days=7)
+        week_data = Order.objects.filter(register_date__gte=week_date)
+        data = Order.objects.filter(register_date__lt=week_date)
         context = dict(
             self.admin_site.each_context(request),
+            week_data=week_data,
+            data=data
         )
         return TemplateResponse(request, 'admin/order_date_view.html', context)
 
