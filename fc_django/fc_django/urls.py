@@ -19,9 +19,16 @@ def fastcampus_index(request, extra_context=None):
     base_date = datetime.datetime.now() - datetime.timedelta(days=7)
     order_data = {}
     for i in range(7):
-        target_date = base_date + datetime.timedelta(days=i)
-        date_key = target_date.srtftime('%Y-%m-%d')
-        order_data[date_key] = Order
+        target_dttm = base_date + datetime.timedelta(days=i)
+        date_key = target_dttm.strftime('%Y-%m-%d')
+        target_date = datetime.date(
+            target_dttm.year, target_dttm.month, target_dttm.day)
+        order_cnt = Order.objects.filter(
+            register_date__date=target_date).count()
+        order_data[date_key] = order_cnt
+    extra_context = {
+        'orders': order_data,
+    }
     # return TemplateResponse(request, 'admin/index.html', extra_context)
     return orig_index(request, extra_context)
 

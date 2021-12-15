@@ -27,13 +27,19 @@
 </div>
 <script>
     var ctx = document.getElementById('orderChart');
-    var chart = new Chart(ctx,{
+    var labels = [];
+    var data = [];
+    {% for key, value in orders.items %}
+        labels.push('{{key}}');
+        data.push({{value}});
+    {% endfor %}
+    var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['test1','test2','test3'],
+            labels: labels,
             datasets: [{
                 label: '주문 건수',
-                data: [10, 20, 30],
+                data: data,
                 borderWidth: 1,
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255, 99, 132, 0.2)'
@@ -41,14 +47,15 @@
         },
         options: {
             scales: {
-                yAxes: [{
+                y: { //강의에서는 옛버전이라 yAxes:[{}] 형태 사용
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        stepSize: 1
                     }
-                }]
+                }
             }
         }
-    })
+    });
 </script>
 {% endblock %}
 
