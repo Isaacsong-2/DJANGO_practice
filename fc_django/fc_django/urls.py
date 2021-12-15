@@ -1,4 +1,4 @@
-
+import datetime
 from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path, include, re_path
@@ -10,11 +10,19 @@ from product.views import (
 from order.views import OrderCreate, OrderList
 from django.views.generic import TemplateView
 
+from order.models import Order
+
 orig_index = admin.site.index
 
 
 def fastcampus_index(request, extra_context=None):
-    extra_context = {'test': 'test'}
+    base_date = datetime.datetime.now() - datetime.timedelta(days=7)
+    order_data = {}
+    for i in range(7):
+        target_date = base_date + datetime.timedelta(days=i)
+        date_key = target_date.srtftime('%Y-%m-%d')
+        order_data[date_key] = Order
+    # return TemplateResponse(request, 'admin/index.html', extra_context)
     return orig_index(request, extra_context)
 
 

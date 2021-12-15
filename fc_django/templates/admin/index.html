@@ -1,6 +1,13 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
 
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
 
 {% block coltype %}colMS{% endblock %}
@@ -14,11 +21,35 @@
 {% block content %}
 <div id="content-main" class="p-4">
   <!-- {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %} -->
-  <h4>주문 현황</h4>
-  <div>{{ test }}</div>
-  <h4>현재 환율</h4>
-  <div></div>
+    <h4>주문 현황</h4>
+    <canvas id="orderChart"></canvas>
+    <div></div>
 </div>
+<script>
+    var ctx = document.getElementById('orderChart');
+    var chart = new Chart(ctx,{
+        type: 'bar',
+        data: {
+            labels: ['test1','test2','test3'],
+            datasets: [{
+                label: '주문 건수',
+                data: [10, 20, 30],
+                borderWidth: 1,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 0.2)'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    })
+</script>
 {% endblock %}
 
 {% block sidebar %}
