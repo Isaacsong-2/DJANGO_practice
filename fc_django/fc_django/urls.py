@@ -1,5 +1,6 @@
 
 from django.contrib import admin
+from django.template.response import TemplateResponse
 from django.urls import path, include, re_path
 from fcuser.views import index, logout, RegisterView, LoginView
 from product.views import (
@@ -8,6 +9,18 @@ from product.views import (
 )
 from order.views import OrderCreate, OrderList
 from django.views.generic import TemplateView
+
+orig_index = admin.site.index
+
+
+def fastcampus_index(request, extra_context=None):
+    extra_context = {'test': 'test'}
+    return orig_index(request, extra_context)
+
+
+admin.site.index = fastcampus_index
+
+
 urlpatterns = [
     re_path(r'^admin/manual/$', TemplateView.as_view(template_name='admin/manual.html',
                                                      extra_context={'title': '매뉴얼', 'site_title': '패스트캠퍼스', 'site_header': '패스트캠퍼스'})),
