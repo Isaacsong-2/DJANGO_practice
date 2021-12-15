@@ -11,7 +11,7 @@ from order.views import OrderCreate, OrderList
 from django.views.generic import TemplateView
 
 from order.models import Order
-
+from .functions import get_exchange
 orig_index = admin.site.index
 
 
@@ -28,6 +28,7 @@ def fastcampus_index(request, extra_context=None):
         order_data[date_key] = order_cnt
     extra_context = {
         'orders': order_data,
+        'exchange': get_exchange(),
     }
     # return TemplateResponse(request, 'admin/index.html', extra_context)
     return orig_index(request, extra_context)
