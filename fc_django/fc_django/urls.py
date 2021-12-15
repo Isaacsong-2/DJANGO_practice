@@ -1,13 +1,16 @@
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from fcuser.views import index, logout, RegisterView, LoginView
 from product.views import (
     ProductList, ProductCreate, ProductDetail,
     ProductListAPI, ProductDetailAPI
 )
 from order.views import OrderCreate, OrderList
+from django.views.generic import TemplateView
 urlpatterns = [
+    re_path(r'^admin/manual/$', TemplateView.as_view(template_name='admin/manual.html',
+                                                     extra_context={'title': '매뉴얼', 'site_title': '패스트캠퍼스', 'site_header': '패스트캠퍼스'})),
     path('admin/', admin.site.urls),
     path('baton/', include('baton.urls')),
     path('', index),
